@@ -111,6 +111,9 @@ class App extends Component {
               </div>
             </div>
           </div>
+          <div className="open-search">
+              <a>Add a book</a>
+          </div>
         </div>
       </div>
     );
