@@ -7,12 +7,17 @@ import './App.css';
 
 class App extends Component {
   state = {
-    books: []
+    books: [],
+    allBooks: []
   }
 
   componentDidMount(){
     BooksAPI.getAll().then((books) => {
       this.setState( { books } );
+    })
+
+    BooksAPI.search().then((allBooks)=>{
+      this.setState({ allBooks });
     })
   }
 
@@ -21,7 +26,7 @@ class App extends Component {
       <BrowserRouter>
         <div className="App">
           <Route path="/search" component={() => (
-            <SearchBooks/>
+            <SearchBooks allBooks={this.state.allBooks}/>
           )}/>
           <Route exact path="/" component={() => (
             <ListBooks books={this.state.books}/>

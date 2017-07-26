@@ -1,9 +1,36 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import escapeRegExp from "escape-string-regexp";
 
 class SearchBooks extends Component{
-    render(){
-        return(
+  static PropTypes = {
+    allBooks: PropTypes.array.isRequired
+  }
+
+  state = {
+    query: ""
+  }
+
+
+
+  searchQuery = (query) => {
+    this.setState({query: query.trim()})
+  }
+
+  render(){
+    const {books} = this.props.allBooks;
+    const {query} = this.state.query;
+
+    let showingBooks;
+    if(query){
+      const match = new RegExp(escapeRegExp(this.state.query), 'i'); //"i" - ignore case
+      showingBooks = books.filter((book)=>match.test(book.name || book.title))
+    }
+
+    showingBooks.sortBy('title');
+    
+     return(
         <div className="search-books">
             <div className="search-books-bar">
               <Link to="/" className="close-search">Close</Link>
@@ -16,16 +43,22 @@ class SearchBooks extends Component{
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"/>
+                <input onChange={(event)=>{this.searchQuery(event.target.value)}} type="text" placeholder="Search by title or author"/>
                 
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid">
+
+              </ol>
             </div>
           </div>
         )
     }
+}
+
+SearchBooks.PropTypes = {
+    allBooks: PropTypes.array.isRequired
 }
 
 export default SearchBooks;

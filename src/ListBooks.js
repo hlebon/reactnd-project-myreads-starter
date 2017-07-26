@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Link } from 'react-router-dom';
-import CurrentlyReading from './CurrentlyReading'
-import WantToRead from './WantToRead'
-import Read from './Read'
+import Shelf from './Shelf'
 import PropTypes from 'prop-types';
 
 class ListBooks extends Component{
@@ -23,9 +21,9 @@ class ListBooks extends Component{
           </div>
           <div className="list-books-content">
             <div>
-              <CurrentlyReading leyendo={leyendo}/>
-              <WantToRead quieroLeer={quieroLeer}/>
-              <Read leidos={leidos}/>
+              <Shelf libros={leyendo} title={"Leyendo"}/>
+              <Shelf libros={quieroLeer} title={"Quiero Leer"}/>
+              <Shelf libros={leidos} title={"Leidos"}/>
             </div>
           </div>
           <div className="open-search">
@@ -37,7 +35,7 @@ class ListBooks extends Component{
 }
 
 ListBooks.PropTypes = {
-  books: PropTypes.array.isRquired
+  books: PropTypes.array.isRequired
 }
 
 export default ListBooks;

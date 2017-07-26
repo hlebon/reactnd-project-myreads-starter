@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 
 class Read extends Component{
     static propTypes = {
-        leidos: PropTypes.array.isRquired
+        libros: PropTypes.array.isRequired,
+        title: PropTypes.string.isRequired
     }
 
     render(){
-        const leidos = this.props.leidos;
+        const { libros, title } = this.props;
 
         return (
         <div className="bookshelf">
-                <h2 className="bookshelf-title">Quiero Leer</h2>
+                <h2 className="bookshelf-title">{title}</h2>
                 <div className="bookshelf-books">
                   <ol className="books-grid">
-                    {leidos.map( book => (
+                    {libros.map( book => (
                       <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
@@ -43,7 +44,8 @@ class Read extends Component{
 
 
 Read.PropTypes = {
-  leidos: PropTypes.array.isRquired
+  libros: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default Read;
