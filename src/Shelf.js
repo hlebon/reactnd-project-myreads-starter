@@ -9,6 +9,7 @@ class Read extends Component{
 
     render(){
         const { libros, title } = this.props;
+        console.log(libros);
 
         return (
         <div className="bookshelf">
@@ -19,7 +20,8 @@ class Read extends Component{
                       <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${book.imageLinks.smallThumbnail})`}}></div>
+                            {console.log(book.imageLinks)}
+                            <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${(book.imageLinks)?book.imageLinks.smallThumbnail:"https://fakeimg.pl/128x192/"})`}}></div>
                             <div className="book-shelf-changer">
                               <select>
                                 <option value="none" disabled>Move to...</option>
