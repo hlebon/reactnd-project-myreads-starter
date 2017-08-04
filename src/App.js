@@ -13,8 +13,7 @@ class App extends Component {
   }
 
   state = {
-    books: [],
-    allBooks: []
+    books: []
   }
 
   componentDidMount(){
@@ -23,19 +22,12 @@ class App extends Component {
     })
   }
 
-  getBooksBy(filter){
-    BooksAPI.search(filter,20).then((allBooks)=>{
-      this.setState({ allBooks });
-    })
-  }
-
   render() {
     return (
       <BrowserRouter>
         <div className="App">
           <Route path="/search" component={() => (
-            <SearchBooks onGetBooksBy={(filter)=>{this.getBooksBy(filter)}}
-              allBooks={this.state.allBooks}/>
+            <SearchBooks/>
           )}/>
           <Route exact path="/" component={() => (
             <ListBooks books={this.state.books}/>

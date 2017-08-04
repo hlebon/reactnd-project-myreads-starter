@@ -1,45 +1,36 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import escapeRegExp from "escape-string-regexp";
-import sortBy from "sort-by";
 import Shelf from "./Shelf"
+import * as BooksAPI from './BooksAPI';
+import PropTypes from 'prop-types';
 
 class SearchBooks extends Component{
   static PropTypes = {
-    allBooks: PropTypes.array.isRequired,
-    onGetBooksBy: PropTypes.func.isRequired
+    allBooks: PropTypes.array.isRequired
   }
 
   state = {
-    query: ""
+    query: "",
+    allBooks: []
   }
 
-
+  getBooksBy(filter){
+    BooksAPI.search(filter,20).then((allBooks)=>{
+      this.setState({ allBooks });
+    })
+  }
 
   searchQuery = (query) => {
-    this.setState({query: query.trim()})
-  }
-
-  bringMeTheBooks(value){
-    console.log(value);
-    this.props.onGetBooksBy(value);
+    this.setState({query: query.trim()});
+    console.log(query);
+    this.getBooksBy(query);
   }
 
   render(){
-    console.log(this.props);
-    const books = this.props.allBooks;
-    const query = this.state.query;
-
-
-    /*console.log(books);
-    let showingBooks;
-    if("Linux"){
-      const match = new RegExp(escapeRegExp(this.state.query), 'i'); //"i" - ignore case
-      showingBooks = books.filter((book)=>match.test(book.name || book.title))
-    }*/
-
-
+    console.log(this.state);
+    const books = (!this.state.allBooks) ? []: this.state.allBooks;
+    console.log("books");
+    console.log(books);
 
     //showingBooks.sortBy('title');
     //console.log(showingBooks);
@@ -57,9 +48,8 @@ class SearchBooks extends Component{
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input onChange={(event)=>{this.searchQuery(event.target.value)}} type="text" placeholder="Search by title or author"/>
-                <input onChange={(event)=>{this.bringMeTheBooks(event.target.value)}} type="text" placeholder="Search by title or author"/>
-                
+                <input type="text" placeholder="Search by title or author"
+                 value={this.state.query} onChange={(event)=>{this.searchQuery(event.target.value)}}/>
               </div>
             </div>
             <div className="search-books-results">
@@ -73,8 +63,7 @@ class SearchBooks extends Component{
 }
 
 SearchBooks.PropTypes = {
-    allBooks: PropTypes.array.isRequired,
-    onGetBooksBy: PropTypes.func.isRequired
+    allBooks: PropTypes.array.isRequired
 }
 
 export default SearchBooks;
