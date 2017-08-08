@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Shelf from "./Shelf"
-import * as BooksAPI from './BooksAPI';
+import Shelf from "../shelf_page/Shelf"
+import * as BooksAPI from '../BooksAPI';
 import PropTypes from 'prop-types';
 
 class SearchBooks extends Component{
-  static PropTypes = {
-    allBooks: PropTypes.array.isRequired
-  }
 
   state = {
     query: "",
@@ -15,23 +12,28 @@ class SearchBooks extends Component{
   }
 
   getBooksBy(filter){
-    BooksAPI.search(filter,20).then((allBooks)=>{
-      this.setState({ allBooks });
-    })
+    if(filter){
+      BooksAPI.search(filter,20).then((allBooks)=>{
+        console.log(allBooks);
+        if(allBooks.error){
+          this.setState({ allBooks });
+        }else{
+          this.setState({ allBooks: [] });
+        }
+      })
+    }else{
+      this.setState({ allBooks: [] });
+    }
+    
   }
 
   searchQuery = (query) => {
     this.setState({query: query.trim()});
-    console.log(query);
     this.getBooksBy(query);
   }
 
   render(){
-    console.log(this.state);
-    const books = (!this.state.allBooks) ? []: this.state.allBooks;
-    console.log("books");
-    console.log(books);
-
+    const books = this.state.allBooks;
     //showingBooks.sortBy('title');
     //console.log(showingBooks);
     
@@ -54,16 +56,12 @@ class SearchBooks extends Component{
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                <Shelf libros={books} title={""}/>
+                <Shelf books={books} title={""}/>
               </ol>
             </div>
           </div>
         )
     }
-}
-
-SearchBooks.PropTypes = {
-    allBooks: PropTypes.array.isRequired
 }
 
 export default SearchBooks;

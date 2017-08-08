@@ -2,23 +2,26 @@ import React, { Component } from 'react';
 import { Route, BrowserRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as BooksAPI from './BooksAPI';
-import ListBooks from './ListBooks';
-import SearchBooks from './SearchBooks';
+import ListBooks from './shelf_page/ListBooks';
+import SearchBooks from './search_page/SearchBooks';
 import './App.css';
 
 class App extends Component {
-  static PropTypes = {
-    books: PropTypes.array.isRequired,
-    allBooks: PropTypes.array.isRequired
-  }
 
   state = {
-    books: []
+    allBooks: []
   }
 
   componentDidMount(){
-    BooksAPI.getAll().then((books) => {
-      this.setState( { books } );
+    BooksAPI.getAll().then((allBooks) => {
+      this.setState( { allBooks } );
+    })
+  }
+
+  updateBook = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((book) => {
+      console.log("Libro actualizado");
+      console.log(book);
     })
   }
 
@@ -30,17 +33,12 @@ class App extends Component {
             <SearchBooks/>
           )}/>
           <Route exact path="/" component={() => (
-            <ListBooks books={this.state.books}/>
+            <ListBooks allBooks={this.state.allBooks} onUpdateBook={this.updateBook}/>
           )}/>
         </div>
       </BrowserRouter>
     );
   }
-}
-
-App.PropTypes = {
-    books: PropTypes.array.isRequired,
-    allBooks: PropTypes.array.isRequired
 }
 
 export default App;

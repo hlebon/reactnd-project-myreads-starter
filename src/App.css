@@ -162,6 +162,10 @@ body, .app {
   cursor: pointer;
 }
 
+.book-state{
+  background-color: gray;
+}
+
 /* book cover */
 
 .book-cover {

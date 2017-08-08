@@ -3,27 +3,38 @@ import PropTypes from 'prop-types';
 
 class Read extends Component{
     static propTypes = {
-        libros: PropTypes.array.isRequired,
-        title: PropTypes.string.isRequired
+        books: PropTypes.array.isRequired,
+        title: PropTypes.string.isRequired,
+        onUpdateBook: PropTypes.func.isRequired
     }
 
+    state = {
+      value: ""
+    }
+
+    handleChange = (event, book) => {
+      this.props.onUpdateBook();
+      this.setState({value: event.target.value});
+      console.log( event.target.value);
+      console.log(book.id);
+    };
+
     render(){
-        const { libros, title } = this.props;
-        console.log(libros);
+        const { books, title } = this.props;
+        let value = this.state.value;
 
         return (
         <div className="bookshelf">
                 <h2 className="bookshelf-title">{title}</h2>
                 <div className="bookshelf-books">
                   <ol className="books-grid">
-                    {libros.map( book => (
+                    {books.map( book => (
                       <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
-                            {console.log(book.imageLinks)}
                             <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${(book.imageLinks)?book.imageLinks.smallThumbnail:"https://fakeimg.pl/128x192/"})`}}></div>
                             <div className="book-shelf-changer">
-                              <select>
+                              <select value={book.shelf} onChange={(event) => this.handleChange(event, book)}>
                                 <option value="none" disabled>Move to...</option>
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
@@ -46,8 +57,9 @@ class Read extends Component{
 
 
 Read.PropTypes = {
-  libros: PropTypes.array.isRequired,
-  title: PropTypes.string.isRequired
+  books: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  onUpdateBook: PropTypes.func.isRequired
 }
 
 export default Read;
