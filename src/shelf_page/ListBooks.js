@@ -9,10 +9,10 @@ class ListBooks extends Component{
         onUpdateBook: PropTypes.func.isRequired
     }
 
-    UpdateBook = (book) => {
-      console.log("Hola soy un UpdateBook");
+    updateBook = (shelf, book) => {
+      this.props.onUpdateBook(shelf, book)
     }
-    
+
     render(){
         const allBooks = this.props.allBooks;
 
@@ -27,9 +27,9 @@ class ListBooks extends Component{
           </div>
           <div className="list-books-content">
             <div>
-              <Shelf books={leyendo} title={"Leyendo"} onUpdateBook={this.UpdateBook}/>
-              <Shelf books={quieroLeer} title={"Quiero Leer"} onUpdateBook={this.UpdateBook}/>
-              <Shelf books={leidos} title={"Leidos"} onUpdateBook={this.UpdateBook}/>
+              <Shelf books={leyendo} title={"Leyendo"} onUpdateBook={this.updateBook}/>
+              <Shelf books={quieroLeer} title={"Quiero Leer"} onUpdateBook={this.updateBook}/>
+              <Shelf books={leidos} title={"Leidos"} onUpdateBook={this.updateBook}/>
             </div>
           </div>
           <div className="open-search">

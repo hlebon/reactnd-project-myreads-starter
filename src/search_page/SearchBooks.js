@@ -1,23 +1,30 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Shelf from "../shelf_page/Shelf"
+import AllBooks from "./AllBooks"
 import * as BooksAPI from '../BooksAPI';
 import PropTypes from 'prop-types';
 
 class SearchBooks extends Component{
+  static PropTypes = {
+        onUpdateBook: PropTypes.func.isRequired
+    }
 
   state = {
     query: "",
     allBooks: []
   }
 
+  Update
+
   getBooksBy(filter){
     if(filter){
       BooksAPI.search(filter,20).then((allBooks)=>{
         console.log(allBooks);
-        if(allBooks.error){
+        if(!allBooks.error){
+          console.log("I am here");
           this.setState({ allBooks });
         }else{
+          console.log("I am here two");
           this.setState({ allBooks: [] });
         }
       })
@@ -25,6 +32,10 @@ class SearchBooks extends Component{
       this.setState({ allBooks: [] });
     }
     
+  }
+
+  updateBook = (shelf, book) => {
+      this.props.onUpdateBook(shelf, book)
   }
 
   searchQuery = (query) => {
@@ -56,12 +67,16 @@ class SearchBooks extends Component{
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                <Shelf books={books} title={""}/>
+                <AllBooks books={books} OnSearchBook={this.getBooksBy} onUpdateBook={this.updateBook}/>
               </ol>
             </div>
           </div>
         )
     }
+}
+
+SearchBooks.PropTypes = {
+  onUpdateBook: PropTypes.func.isRequired,
 }
 
 export default SearchBooks;
