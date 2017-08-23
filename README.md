@@ -13,11 +13,11 @@ My reads project: It is a basic tracking app written in react and react-dom
 
 ## Installing
 Installing the app and dependencies:
-`npm install`
+* `npm install`
 
 ## Launch
 Inside the project run:
-`npm start`
+* `npm start`
 
 ## Something is Missing?
 If you can't install or launch this repo you can contact me on [twitter](https://twitter.com/hanslgarcia)
