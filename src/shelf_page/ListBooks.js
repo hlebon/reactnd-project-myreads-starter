@@ -16,20 +16,20 @@ class ListBooks extends Component{
     render(){
         const allBooks = this.props.allBooks;
 
-        const leyendo = allBooks.filter( ( book => book.shelf === 'currentlyReading' ))
-        const leidos = allBooks.filter( ( book => book.shelf === 'read' ) )
-        const quieroLeer = allBooks.filter( ( book => book.shelf === 'wantToRead' ) )
+        const currentlyReading = allBooks.filter( ( book => book.shelf === 'currentlyReading' ))
+        const read = allBooks.filter( ( book => book.shelf === 'read' ) )
+        const wantToRead = allBooks.filter( ( book => book.shelf === 'wantToRead' ) )
 
         return(
         <div className="list-books">
           <div className="list-books-title">
-            <h1>Mis Lecturas</h1>
+            <h1>My Reads</h1>
           </div>
           <div className="list-books-content">
             <div>
-              <Shelf books={leyendo} title={"Leyendo"} onUpdateBook={this.updateBook}/>
-              <Shelf books={quieroLeer} title={"Quiero Leer"} onUpdateBook={this.updateBook}/>
-              <Shelf books={leidos} title={"Leidos"} onUpdateBook={this.updateBook}/>
+              <Shelf books={currentlyReading} title={"Currently reading"} onUpdateBook={this.updateBook}/>
+              <Shelf books={wantToRead} title={"Want to read"} onUpdateBook={this.updateBook}/>
+              <Shelf books={read} title={"Read"} onUpdateBook={this.updateBook}/>
             </div>
           </div>
           <div className="open-search">

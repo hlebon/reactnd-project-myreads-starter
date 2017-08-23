@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AllBooks from "./AllBooks"
-import * as BooksAPI from '../BooksAPI';
+import * as BooksAPI from '../common/BooksAPI';
 import PropTypes from 'prop-types';
 
 class SearchBooks extends Component{
@@ -14,28 +14,31 @@ class SearchBooks extends Component{
     allBooks: []
   }
 
-  Update
+  componentDidMount(){
+    this.setState({ query: this.props.keyword });
+    this.getBooksBy(this.props.keyword)
+  }
 
   getBooksBy(filter){
-    if(filter){
-      BooksAPI.search(filter,20).then((allBooks)=>{
-        console.log(allBooks);
-        if(!allBooks.error){
-          console.log("I am here");
-          this.setState({ allBooks });
-        }else{
-          console.log("I am here two");
-          this.setState({ allBooks: [] });
-        }
-      })
-    }else{
-      this.setState({ allBooks: [] });
-    }
-    
+    console.log((filter));
+      if(filter){
+        setTimeout(() => {
+          BooksAPI.search(filter,18).then((allBooks)=>{
+              if(!allBooks.error){
+                this.setState({ allBooks });
+              }else{
+                this.setState({ allBooks: [] });
+              }
+          });
+        }, 0);
+      }else{
+        this.setState({ allBooks: [] });
+      }
   }
 
   updateBook = (shelf, book) => {
-      this.props.onUpdateBook(shelf, book)
+    let keyword = this.state.query;
+    this.props.onUpdateBook(shelf, book, keyword)
   }
 
   searchQuery = (query) => {
@@ -44,9 +47,26 @@ class SearchBooks extends Component{
   }
 
   render(){
-    const books = this.state.allBooks;
-    //showingBooks.sortBy('title');
-    //console.log(showingBooks);
+    let books = this.state.allBooks;
+    let shelfBooks = this.props.shelfBooks;
+    let newListBook = []; 
+
+    if(books.length > 0){
+      newListBook = books.map((book) => { 
+        let nbook;
+        shelfBooks.forEach((shelfBook) => {
+          if(book.id === shelfBook.id){
+            nbook = shelfBook;
+          }
+        });
+        if(nbook){
+          return nbook;
+        }else{
+          book.shelf = "none";
+          return book;
+        }
+      });
+    }
     
      return(
         <div className="search-books">
@@ -67,7 +87,7 @@ class SearchBooks extends Component{
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                <AllBooks books={books} OnSearchBook={this.getBooksBy} onUpdateBook={this.updateBook}/>
+                <AllBooks books={newListBook} onSearchBook={this.getBooksBy} onUpdateBook={this.updateBook}/>
               </ol>
             </div>
           </div>
