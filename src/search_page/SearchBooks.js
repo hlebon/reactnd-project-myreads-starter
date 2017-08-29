@@ -26,7 +26,7 @@ class SearchBooks extends Component{
     })
   }
 
-  handlerChange = (event) => {
+  handleChange = (event) => {
     this.setState({
       value: event.target.value
     });
@@ -84,7 +84,7 @@ class SearchBooks extends Component{
               <div className="search-books-input-wrapper">
                 <input type="text" placeholder="Search by title or author"
                        value={this.state.value} 
-                       onChange={this.handlerChange}
+                       onChange={this.handleChange}
                 />
               </div>
             </div>

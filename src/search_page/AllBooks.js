@@ -16,8 +16,8 @@ class AllBooks extends Component{
     };
 
     render(){
-        const books = this.props.books;
-        return (
+      const books = this.props.books;
+      return (
         <div className="bookshelf">
                 <div className="bookshelf-books">
                   <ol className="books-grid">
