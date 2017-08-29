@@ -4,17 +4,15 @@ import PropTypes from 'prop-types';
 class AllBooks extends Component{
     static propTypes = {
         books: PropTypes.array.isRequired,
-        onUpdateBook: PropTypes.func.isRequired,
-        onSearchBook: PropTypes.func.isRequired
+        onUpdateBook: PropTypes.func.isRequired
     }
 
     state = {
       value: ""
     }
 
-    handleChange = (event, book) => {
+    handleUpdate = (event, book) => {
       this.props.onUpdateBook(event.target.value, book);
-      this.setState({value: event.target.value});
     };
 
     render(){
@@ -29,7 +27,7 @@ class AllBooks extends Component{
                           <div className="book-top">
                             <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${(book.imageLinks)?book.imageLinks.smallThumbnail:"https://fakeimg.pl/128x192/"})`}}></div>
                             <div className="book-shelf-changer">
-                              <select value={book.shelf} onChange={(event) => this.handleChange(event, book)}>
+                              <select value={book.shelf} onChange={(event) => this.handleUpdate(event, book)}>
                                 <option value="none" disabled>Move to...</option>
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
@@ -48,13 +46,6 @@ class AllBooks extends Component{
               </div>
         );
     }
-}
-
-
-AllBooks.PropTypes = {
-  books: PropTypes.array.isRequired,
-  onUpdateBook: PropTypes.func.isRequired,
-  onSearchBook: PropTypes.func.isRequired
 }
 
 export default AllBooks;

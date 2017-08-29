@@ -1,20 +1,36 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import Shelf from './Shelf'
-import PropTypes from 'prop-types';
+import * as BooksAPI from '../common/BooksAPI';
 
 class ListBooks extends Component{
-    static PropTypes = {
-        allBooks: PropTypes.array.isRquired,
-        onUpdateBook: PropTypes.func.isRequired
+
+    state = {
+      allBooks: []
+    }
+
+    componentDidMount(){
+      BooksAPI.getAll().then((allBooks) => {
+        this.setState( { allBooks: allBooks } );
+      });
     }
 
     updateBook = (shelf, book) => {
-      this.props.onUpdateBook(shelf, book)
+      BooksAPI.update(book, shelf);
+      this.relocateBook(book);
+    }
+
+    relocateBook = (oldBook) => {
+      BooksAPI.get(oldBook.id).then((book) => {
+        this.state.allBooks.splice(this.state.allBooks.indexOf(oldBook), 1);
+        this.setState(state => ({
+          allBooks: state.allBooks.concat([book]),
+        }));
+      })
     }
 
     render(){
-        const allBooks = this.props.allBooks;
+        const allBooks = this.state.allBooks;
 
         const currentlyReading = allBooks.filter( ( book => book.shelf === 'currentlyReading' ))
         const read = allBooks.filter( ( book => book.shelf === 'read' ) )
@@ -38,11 +54,6 @@ class ListBooks extends Component{
         </div>
         )
     }
-}
-
-ListBooks.PropTypes = {
-  allBooks: PropTypes.array.isRequired,
-  onUpdateBook: PropTypes.func.isRequired
 }
 
 export default ListBooks;

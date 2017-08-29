@@ -2,56 +2,66 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AllBooks from "./AllBooks"
 import * as BooksAPI from '../common/BooksAPI';
-import PropTypes from 'prop-types';
 
 class SearchBooks extends Component{
-  static PropTypes = {
-        onUpdateBook: PropTypes.func.isRequired
-    }
 
   state = {
-    query: "",
-    allBooks: []
+    value: "",
+    books: [],
+    shelfBooks: []
   }
 
   componentDidMount(){
-    this.setState({ query: this.props.keyword });
-    this.getBooksBy(this.props.keyword)
+    BooksAPI.getAll().then((allBooks) => {
+      this.setState( { shelfBooks: allBooks } );
+    });
   }
 
-  getBooksBy(filter){
-      if(filter){
-        setTimeout(() => {
-          BooksAPI.search(filter,18).then((allBooks)=>{
-              if(!allBooks.error && filter !== ""){
-                this.setState({ allBooks });
-              }else{
-                this.setState({ allBooks: [] });
-              }
-          });
-        }, 0);
-      }else{
-        this.setState({ allBooks: [] });
-      }
+  relocateBook = (oldBook) => {
+    BooksAPI.get(oldBook.id).then((book) => {
+      this.state.shelfBooks.splice(this.state.shelfBooks.indexOf(oldBook), 1);
+      this.setState(state => ({
+        shelfBooks: state.shelfBooks.concat([book]),
+      }));
+    })
+  }
+
+  handlerChange = (event) => {
+    this.setState({
+      value: event.target.value
+    });
+    this.searchBook(this.state.value);
+  }
+
+  searchBook = (value) => {
+    if(value){
+      setTimeout(() => {
+        BooksAPI.search(value,20).then((allBooks)=>{
+            if(!allBooks.error && value !== ""){
+              this.setState({ books: allBooks });
+            }else if(value === ""){
+              this.setState({ books: [] });
+            }
+        });
+      }, 0);
+    }
   }
 
   updateBook = (shelf, book) => {
-    let keyword = this.state.query;
-    this.props.onUpdateBook(shelf, book, keyword)
-  }
-
-  searchQuery = (query) => {
-    this.setState({query: query.trim()});
-    this.getBooksBy(query);
+    BooksAPI.update(book, shelf);
+    this.relocateBook(book);
   }
 
   render(){
-    let books = this.state.allBooks;
-    let shelfBooks = this.props.shelfBooks;
-    let newListBook = []; 
+    const books = this.state.books;
+    const shelfBooks = this.state.shelfBooks;
+    let BooksList = [];
 
+
+    //if there is any shelf's book in the api response
+    //add it to the list of books to show.
     if(books.length > 0){
-      newListBook = books.map((book) => { 
+      BooksList = books.map((book) => { 
         let nbook;
         shelfBooks.forEach((shelfBook) => {
           if(book.id === shelfBook.id){
@@ -66,28 +76,28 @@ class SearchBooks extends Component{
         }
       });
     }
-    
-     return(
+
+    return(
         <div className="search-books">
             <div className="search-books-bar">
               <Link to="/" className="close-search">Close</Link>
               <div className="search-books-input-wrapper">
                 <input type="text" placeholder="Search by title or author"
-                 value={this.state.query} onChange={(event)=>{this.searchQuery(event.target.value)}}/>
+                       value={this.state.value} 
+                       onChange={this.handlerChange}
+                />
               </div>
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                <AllBooks books={newListBook} onSearchBook={this.getBooksBy} onUpdateBook={this.updateBook}/>
+                <AllBooks books={BooksList} 
+                          onUpdateBook={this.updateBook}
+                />
               </ol>
             </div>
           </div>
         )
     }
-}
-
-SearchBooks.PropTypes = {
-  onUpdateBook: PropTypes.func.isRequired,
 }
 
 export default SearchBooks;

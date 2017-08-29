@@ -8,13 +8,8 @@ class Read extends Component{
         onUpdateBook: PropTypes.func.isRequired
     }
 
-    state = {
-      value: ""
-    }
-
     handleChange = (event, book) => {
       this.props.onUpdateBook(event.target.value, book);
-      this.setState({value: event.target.value});
     };
 
     render(){
@@ -50,13 +45,6 @@ class Read extends Component{
               </div>
         );
     }
-}
-
-
-Read.PropTypes = {
-  books: PropTypes.array.isRequired,
-  title: PropTypes.string.isRequired,
-  onUpdateBook: PropTypes.func.isRequired
 }
 
 export default Read;
